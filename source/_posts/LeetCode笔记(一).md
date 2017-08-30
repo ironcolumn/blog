@@ -1,7 +1,8 @@
 ---
 title: LeetCode笔记(一)
 date: 2017-08-29 19:26:46
-tags:
+tags: [Leetcode,HashMap]
+categories: Leetcode
 mathjax: true
 ---
 # <center>Two Sum</center>
@@ -64,3 +65,24 @@ public int[] twoSum(int[] nums, int target) {
 #### 关于`HashMap`:  [HashMap深度解析(一)](http://blog.csdn.net/ghsau/article/details/16843543)
 #### `HashMap`的时间复杂度思考:  [java中hashmap容器实现查找O(1)时间复杂度的思考](http://blog.csdn.net/u014633283/article/details/48549155)
 #### 关于`HashMap`冲突:  [HashMap解决hash冲突的方法](http://blog.csdn.net/subuser/article/details/47188837)
+## 解法三 One-pass Hash Table(单程哈希表)
+``` java
+public int[] twoSum(int[] nums, int target) {
+    Map<Integer, Integer> map = new HashMap<>();
+    for (int i = 0; i < nums.length; i++) {
+        int complement = target - nums[i];
+        if (map.containsKey(complement)) {
+            return new int[] { map.get(complement), i };
+        }
+        map.put(nums[i], i);
+    }
+    throw new IllegalArgumentException("No two sum solution");
+}
+```
+### 思路
+对解法二的优化，在第一次遍历插入 `HashMap` 的过程中同时判断表中是否已存在符合条件的元素（在 ` map.put(nums[i], i)` 之前进行条件判断），如果存在则直接返回下标组，退出循环，否则执行插入操作。
+
+### 复杂度分析
+时间复杂度: $O(n)$,对原数组 `int[] nums` 只进行了一次遍历,每次哈希表查询的时间复杂度仅为$O(1)$,因此总时间复杂度为$O(n)$.
+
+空间复杂度: $O(n)$ 额外占用的空间取决于哈希表中存储的条目数量(原数组的长度).
